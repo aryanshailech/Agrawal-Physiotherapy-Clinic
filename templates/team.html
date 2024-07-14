@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhysioClinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/team.css') }}">
+</head>
+<body>
+    {% include 'header.html' %}
+    <section id="intro">
+        <h2>Meet Our Experts</h2>
+        <p>Our team of highly skilled and experienced physiotherapists is dedicated to providing the best care and support to help you achieve your health and wellness goals. Get to know our team members below.</p>
+    </section>
+    
+    <section id="team">
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='images/doc1.jpg') }}" alt="Dr. Ankit Agrawal" class="left">
+            <div class="member-info">
+                <h3>Dr. Ankit Agrawal</h3>
+                <p><strong>Founder & Chief Physiotherapist</strong></p>
+                <p>Dr. Ankit Agrawal has over 20 years of experience in the field of physiotherapy. He specializes in sports injuries, orthopaedic conditions, and neurological rehabilitation. Dr. Agrawal is committed to providing personalized care and developing innovative treatment plans for his patients.</p>
+                <p>He completed his PhD in Physiotherapy from XYZ University and has been a guest speaker at numerous international conferences. Dr. Agrawal's research has been published in several prestigious medical journals, and he is passionate about advancing the field of physiotherapy through evidence-based practice.</p>
+                <p>Outside of his professional life, Dr. Agrawal enjoys marathon running and is an avid supporter of community health initiatives.</p>
+            </div>
+        </div>
+        
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='images/doc3.jpg') }}" alt="Dr. Priya Sharma" class="right">
+            <div class="member-info">
+                <h3>Dr. Priya Sharma</h3>
+                <p><strong>Senior Physiotherapist</strong></p>
+                <p>With a strong background in geriatric physiotherapy, Dr. Priya Sharma has been helping older adults maintain their independence and improve their quality of life for over 15 years. Her compassionate approach and expertise in balance training make her a valuable asset to our team.</p>
+                <p>Dr. Sharma earned her Master's degree in Geriatric Physiotherapy from ABC University and has since dedicated her career to improving elderly care. She has developed specialized programs for fall prevention and mobility enhancement, which have greatly benefited her patients.</p>
+                <p>In her free time, Dr. Sharma volunteers at local senior centers and enjoys gardening.</p>
+            </div>
+        </div>
+        
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='images/doc2.jpg') }}" alt="Dr. Rajesh Patel" class="left">
+            <div class="member-info">
+                <h3>Dr. Rajesh Patel</h3>
+                <p><strong>Paediatric Physiotherapist</strong></p>
+                <p>Dr. Rajesh Patel specializes in pediatric physiotherapy, focusing on diagnosing, preventing, and treating developmental disorders in children. His friendly demeanor and expertise in play-based therapy help children achieve their developmental milestones.</p>
+                <p>Dr. Patel holds a Doctorate in Pediatric Physiotherapy from DEF University and is a certified specialist in treating conditions such as cerebral palsy and congenital disabilities. He is known for his innovative therapy techniques that incorporate play and creativity to engage young patients.</p>
+                <p>A father of two, Dr. Patel enjoys spending time with his family and is actively involved in youth sports programs in the community.</p>
+            </div>
+        </div>
+        
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='images/doc1.jpg') }}" alt="Dr. Neha Gupta" class="right">
+            <div class="member-info">
+                <h3>Dr. Neha Gupta</h3>
+                <p><strong>Neurological Physiotherapist</strong></p>
+                <p>Dr. Neha Gupta has extensive experience in treating patients with neurological conditions such as stroke, Parkinson’s Disease, and Multiple Sclerosis. Her dedication to restoring mobility and improving the quality of life for her patients is truly inspiring.</p>
+                <p>She received her Doctorate in Neurological Physiotherapy from GHI University and has conducted numerous workshops and training sessions for other healthcare professionals. Dr. Gupta is also involved in clinical research and has contributed to several breakthrough studies in neurological rehabilitation.</p>
+                <p>Dr. Gupta loves hiking and exploring nature, and she often incorporates outdoor activities into her therapy sessions.</p>
+            </div>
+        </div>
+        
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='images/doc2.jpg') }}" alt="Dr. Sameer Verma" class="left">
+            <div class="member-info">
+                <h3>Dr. Sameer Verma</h3>
+                <p><strong>Cardiovascular Physiotherapist</strong></p>
+                <p>Specializing in cardiovascular physiotherapy, Dr. Sameer Verma helps patients with heart and lung conditions improve their endurance and respiratory function. His personalized exercise programs and patient education initiatives are highly effective.</p>
+                <p>Dr. Verma graduated with a Doctorate in Cardiovascular Physiotherapy from JKL University and has since been at the forefront of developing cardiac rehabilitation programs. His work in respiratory therapy has also been recognized for its positive impact on patients with chronic conditions such as asthma.</p>
+                <p>In his spare time, Dr. Verma enjoys cycling and has participated in several charity bike rides to raise awareness for heart health.</p>
+            </div>
+        </div>
+    </section>
+    
+{% include 'footer.html' %}
+</body>
+</html>
