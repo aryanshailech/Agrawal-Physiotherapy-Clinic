@@ -9,28 +9,6 @@ body {
     margin-top: 20px; /* Adjust as needed to create space below header */
 }
 
-/* Hide the images by default */
-.mySlides {
-    display: none;
-}
-
-/* Fade animation */
-.fade {
-    animation-name: fade;
-    animation-duration: 1.5s;
-}
-
-@keyframes fade {
-    from {opacity: .4} 
-    to {opacity: 1}
-}
-
-/* Make the image responsive */
-.slideshow-container img {
-    width: 100%;
-    height: auto;
-}
-
 
 /* Welcome Section */
 .welcome {
