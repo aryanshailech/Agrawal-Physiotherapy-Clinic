@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhysioClinic</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/homel.png') }}" type="image/x-icon"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
 </head>
@@ -22,15 +23,17 @@
                     <li><a href="{{ url_for('services') }}">Services</a></li>
                     <li><a href="{{ url_for('team') }}">Team</a></li>
                     <li><a href="{{ url_for('reviews') }}">Reviews</a></li>
-                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    
                 </ul>
             </nav>
             <div class="contact-info">
                 <p>Call us: (123) 456-7890</p>
-                <button class="appointment-btn">Book Appointment</button>
+                <form action="{{ url_for('loginpage') }}">
+                    <button type="submit" class="login-btn">Login</button>
+                </form>
+
             </div>
         </div>
     </header>
-    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 </body>
 </html>

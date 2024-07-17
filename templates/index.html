@@ -4,30 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhysioClinic</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/homel.png') }}" type="image/x-icon"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    
 </head>
 <body>
     {% include 'header.html' %}
 
-    <!-- Slideshow -->
     <div class="slideshow-container">
         <div class="mySlides fade">
-            <img src="{{ url_for('static', filename='images/home1.jpg') }}" style="width:100%">
-        </div>
-        <div class="mySlides fade">
-            <img src="{{ url_for('static', filename='images/home2.jpg') }}" style="width:100%">
-        </div>
-        <div class="mySlides fade">
-            <img src="{{ url_for('static', filename='images/home3.jpg') }}" style="width:100%">
+            <img src="{{ url_for('static', filename='images/home.jpg') }}" style="width:100%" >
         </div>
     </div>
 
-    <!-- Welcome Section -->
+
+    </div>
     <section class="welcome">
         <div class="container">
             <h1>Welcome to <span class="clinic-name-highlight">Agrawal Physiotherapy Clinic</span></h1>
-            <p>Your health and wellness are our priority. Our experienced team is dedicated to providing personalized care to help you achieve your health goals. <br> <a href="{{url_for('about')}}" class="learn-more-link">Learn More</a></p>
+            <p>Your health and wellness are our priority. Our experienced team is dedicated to providing personalized care to help you achieve your health goals. <br> <a href="{{ url_for('about') }}" class="learn-more-link">Learn More</a></p>
         </div>
     </section>
 
@@ -69,54 +65,54 @@
             </div>
         </div>
     </section>
-
     <!-- Team Section -->
-    <section id="team" class="team-section">
-        <div class="container">
-            <h2>Meet Our Team</h2>
-            <div class="team-members">
-                <div class="team-member">
-                    <img src="{{ url_for('static', filename='images/doc1.jpg') }}" alt="Team Member 1">
-                    <h3>Dr. John Doe</h3>
-                    <p>Senior Physiotherapist</p>
-                </div>
-                <div class="team-member">
-                    <img src="{{ url_for('static', filename='images/doc2.jpg') }}" alt="Team Member 2">
-                    <h3>Dr. Jane Smith</h3>
-                    <p>Physiotherapist</p>
-                </div>
-                <div class="team-member">
-                    <img src="{{ url_for('static', filename='images/doc3.jpg') }}" alt="Team Member 3">
-                    <h3>Dr. Emily Johnson</h3>
-                    <p>Junior Physiotherapist</p>
-                </div>
-                <!-- Add more team members as needed -->
+<section id="team" class="team-section">
+    <div class="container">
+        <h2>Meet Our Team</h2>
+        <div class="team-members">
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='images/sr_pt_home.avif') }}" alt="Team Member 1">
+                <h3>Dr. Puneet Singh</h3>
+                <p>Senior Physiotherapist</p>
             </div>
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='images/pt_home.avif') }}" alt="Team Member 2">
+                <h3>Dr. Vinitha Dravid</h3>
+                <p>Physiotherapist</p>
+            </div>
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='images/jr_pt_home.jpg') }}" alt="Team Member 3">
+                <h3>Dr. Amit Dev</h3>
+                <p>Junior Physiotherapist</p>
+            </div>
+            <!-- Add more team members as needed -->
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Reviews Section -->
-    <section id="reviews" class="reviews-section">
-        <div class="container">
-            <h2>What Our Patients Say</h2>
-            <div class="reviews">
-                <div class="review">
-                    <p>"The treatment I received was excellent. Dr. John Doe helped me recover quickly!"</p>
-                    <h3>- Akash Sen</h3>
-                </div>
-                <div class="review">
-                    <p>"Dr. Jane Smith is very professional and attentive. Highly recommended!"</p>
-                    <h3>- Karan Sharma</h3>
-                </div>
-                <div class="review">
-                    <p>"I had a wonderful experience with Dr. Emily Johnson. She is very caring and skilled."</p>
-                    <h3>- Rahul Thadake</p>
-                </div>
-                <!-- Add more reviews as needed -->
+   <!-- Reviews Section -->
+<section id="reviews" class="reviews-section">
+    <div class="container">
+        <h2>What Our Patients Say</h2>
+        <div class="reviews">
+            <div class="review">
+                <p>"The treatment I received was excellent. Doctor helped me recover quickly!"</p>
+                <h3>- Akash Sen</h3>
             </div>
+            <div class="review">
+                <p>"Dr. Shailesh Agrawal is very professional and attentive. Highly recommended!"</p>
+                <h3>- Karan Sharma</h3>
+            </div>
+            <div class="review">
+                <p>"I had a wonderful experience with Dr. Vinitha Dravid. She is very caring and skilled."</p>
+                <h3>- Rahul Thadake</h3>
+            </div>
+            <!-- Add more reviews as needed -->
         </div>
-    </section>
+    </div>
+</section>
     
     {% include 'footer.html' %}
+
 </body>
 </html>

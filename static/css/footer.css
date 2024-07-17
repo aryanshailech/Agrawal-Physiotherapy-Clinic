@@ -10,57 +10,6 @@ footer {
     gap: 20px;
 }
 
-/* Form Styles */
-.appointment-form {
-    background-color: #e3f2fd;
-    padding: 20px;
-    border-radius: 5px;
-    width: 100%;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-}
-
-.form label {
-    margin-top: 10px;
-    color: #333; /* Label color */
-}
-
-.input,
-.textarea {
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f0f7fa; /* Light blue background */
-    color: #333; /* Text color */
-    width: 100%; /* Full width */
-}
-
-.input:focus,
-.textarea:focus {
-    outline: none;
-    border-color: #5cb3fd; /* Border color on focus */
-    box-shadow: 0 0 5px rgba(92, 179, 253, 0.5); /* Box shadow on focus */
-}
-
-.submit-button {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #3498db; /* Blue background */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%; /* Full width */
-}
-
-.submit-button:hover {
-    background-color: #2980b9; /* Darker blue on hover */
-}
-
 /* Social Media, Contact Info, and Quick Links Section */
 .footer-content {
     display: flex;
@@ -119,6 +68,7 @@ footer {
     padding: 20px;
 }
 
+
 /* Quick Links Section */
 .footer-links {
     list-style: none;
@@ -129,12 +79,12 @@ footer {
     margin-bottom: 5px;
 }
 
-.footer-links a {
+a {
     text-decoration: none;
     color: #333;
 }
 
-.footer-links a:hover {
+a:hover {
     text-decoration: underline;
 }
 
