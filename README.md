@@ -24,9 +24,6 @@ Welcome to the **Agrawal Physiotherapy Clinic** web application! This platform i
 - **Role Management**: Manage user roles and permissions for secure access to sensitive information.
 - **Data Analytics**: Gain insights into clinic operations with various metrics.
 
-### Notifications and Alerts
-- Automated email notifications for appointment confirmations, reminders, and updates.
-
 ## Technologies Used
 
 ### Front-End Development
