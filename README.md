@@ -12,10 +12,6 @@ Welcome to the **Agrawal Physiotherapy Clinic** web application! This platform i
 - **Registration**: Easily register new patients with detailed information.
 - **Patient History**: Access and manage patient treatment history for better tracking.
 
-### Appointment Scheduling
-- **Book Appointments**: Patients can easily book appointments with preferred physiotherapists.
-- **Manage Appointments**: Receptionists can view, update, or cancel appointments.
-
 ### Physiotherapist Management
 - **Add/Edit Physiotherapists**: Manage physiotherapist profiles, specialties, and contact information.
 - **View Patient Assignments**: Access assigned patients and treatment plans.
