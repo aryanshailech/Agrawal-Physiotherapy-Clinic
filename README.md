@@ -36,8 +36,6 @@ Welcome to the **Agrawal Physiotherapy Clinic** web application! This platform i
 ### Front-End Development
 - **HTML**
 - **CSS**
-- **JavaScript**
-- **Bootstrap**
 
 ### Back-End Development
 - **Python**
