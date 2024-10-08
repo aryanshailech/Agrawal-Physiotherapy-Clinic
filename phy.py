@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from flask_mail import Mail, Message
 import os, time, re, random, string
-
+from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 
 app.secret_key = 'ARyan=!12'
@@ -76,10 +76,10 @@ def login():
                     SELECT a.admin_id, a.admin_name, al.password 
                     FROM Admin_Login al
                     JOIN Admin a ON al.admin_id = a.admin_id
-                    WHERE al.admin_id = %s AND al.password = %s
-                ''', (username, password))
+                    WHERE al.admin_id = %s
+                ''', (username,))
                 account = cursor.fetchone()
-                if account:
+                if account and check_password_hash(account['password'], password):
                     session['loggedin'] = True
                     session['id'] = account['admin_id']
                     session['role'] = 'admin'
@@ -93,10 +93,10 @@ def login():
                     SELECT r.receptionist_id, r.receptionist_name, rl.password 
                     FROM Receptionist_Login rl
                     JOIN Receptionist r ON rl.receptionist_id = r.receptionist_id
-                    WHERE rl.receptionist_id = %s AND rl.password = %s
-                ''', (username, password))
+                    WHERE rl.receptionist_id = %s
+                ''', (username,))
                 account = cursor.fetchone()
-                if account:
+                if account and check_password_hash(account['password'], password):
                     session['loggedin'] = True
                     session['id'] = account['receptionist_id']
                     session['role'] = 'receptionist'
@@ -104,16 +104,16 @@ def login():
                     return redirect(url_for('receptionist_page'))
                 else:
                     flash('Incorrect username/password!', 'error')
-                
+
             elif len(username) == 4:  # Physiotherapist ID is 4 digits
                 cursor.execute('''
                     SELECT p.physiotherapist_id, p.physiotherapist_name, pl.password 
                     FROM Physiotherapist_Login pl
                     JOIN Physiotherapist p ON pl.physiotherapist_id = p.physiotherapist_id
-                    WHERE pl.physiotherapist_id = %s AND pl.password = %s
-                ''', (username, password))
+                    WHERE pl.physiotherapist_id = %s
+                ''', (username,))
                 account = cursor.fetchone()
-                if account:
+                if account and check_password_hash(account['password'], password):
                     session['loggedin'] = True
                     session['id'] = account['physiotherapist_id']
                     session['role'] = 'physiotherapist'
@@ -206,14 +206,15 @@ def reset_password(user_id, user_type):
         reverify_password = request.form['reverify_password']
         if new_password == reverify_password:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            
+            hashed_password = generate_password_hash(new_password)
+
             # Update password based on user type
             if user_type == 'receptionist':
-                cursor.execute('UPDATE Receptionist_Login SET password = %s WHERE receptionist_id = %s', (new_password, user_id))
+                cursor.execute('UPDATE Receptionist_Login SET password = %s WHERE receptionist_id = %s', (hashed_password, user_id))
             elif user_type == 'physiotherapist':
-                cursor.execute('UPDATE Physiotherapist_Login SET password = %s WHERE physiotherapist_id = %s', (new_password, user_id))
+                cursor.execute('UPDATE Physiotherapist_Login SET password = %s WHERE physiotherapist_id = %s', (hashed_password, user_id))
             elif user_type == 'admin':
-                cursor.execute('UPDATE Admin_Login SET password = %s WHERE admin_id = %s', (new_password, user_id))
+                cursor.execute('UPDATE Admin_Login SET password = %s WHERE admin_id = %s', (hashed_password, user_id))
             
             mysql.connection.commit()
             flash('Password updated successfully!', 'success')
@@ -221,6 +222,7 @@ def reset_password(user_id, user_type):
         else:
             flash('New passwords do not match!', 'error')
     return render_template('reset_password.html', user_id=user_id, user_type=user_type)
+
 
 
 
@@ -292,14 +294,17 @@ def change_password():
             
             account = cursor.fetchone()
             
-            if account and account['password'] == current_password:
-                # Update password
+            # Verify current password using check_password_hash
+            if account and check_password_hash(account['password'], current_password):
+                # Update password using generate_password_hash
+                hashed_new_password = generate_password_hash(new_password)
+
                 if role == 'receptionist':
-                    cursor.execute('UPDATE Receptionist_Login SET password = %s WHERE receptionist_id = %s', (new_password, user_id))
+                    cursor.execute('UPDATE Receptionist_Login SET password = %s WHERE receptionist_id = %s', (hashed_new_password, user_id))
                 elif role == 'physiotherapist':
-                    cursor.execute('UPDATE Physiotherapist_Login SET password = %s WHERE physiotherapist_id = %s', (new_password, user_id))
+                    cursor.execute('UPDATE Physiotherapist_Login SET password = %s WHERE physiotherapist_id = %s', (hashed_new_password, user_id))
                 elif role == 'admin':
-                    cursor.execute('UPDATE Admin_Login SET password = %s WHERE admin_id = %s', (new_password, user_id))
+                    cursor.execute('UPDATE Admin_Login SET password = %s WHERE admin_id = %s', (hashed_new_password, user_id))
                 
                 mysql.connection.commit()
                 flash('Password changed successfully!', 'success')
@@ -350,14 +355,25 @@ def add_physio():
         address = request.form['address']
         password = request.form.get('password', None) or str(session['id'])  # Default password is admin id
         
+        # Hash the password before storing
+        hashed_password = generate_password_hash(password)
+
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO Physiotherapist (physiotherapist_name, specialization, aadhar_number, contact_number, email, address) VALUES (%s, %s, %s, %s, %s, %s)',
-                       (physio_name, specialization, aadhar_number, contact_number, email, address))
-        physiotherapist_id = cursor.lastrowid
-        cursor.execute('INSERT INTO Physiotherapist_Login (physiotherapist_id, password) VALUES (%s, %s)', (physiotherapist_id, password))
-        mysql.connection.commit()
-        flash('Physiotherapist added successfully!', 'success')
+        try:
+            cursor.execute('INSERT INTO Physiotherapist (physiotherapist_name, specialization, aadhar_number, contact_number, email, address) VALUES (%s, %s, %s, %s, %s, %s)',
+                           (physio_name, specialization, aadhar_number, contact_number, email, address))
+            physiotherapist_id = cursor.lastrowid
+            cursor.execute('INSERT INTO Physiotherapist_Login (physiotherapist_id, password) VALUES (%s, %s)', (physiotherapist_id, hashed_password))
+            mysql.connection.commit()
+            flash('Physiotherapist added successfully!', 'success')
+        except MySQLdb.Error as e:
+            mysql.connection.rollback()
+            flash(f'Error adding physiotherapist: {e}', 'error')
+        finally:
+            cursor.close()
+        
         return redirect(url_for('admin_page'))
+    
     flash('You need to log in as an admin to perform this action.', 'warning')
     return redirect(url_for('loginpage'))
 
@@ -368,30 +384,20 @@ def remove_physio():
         
         try:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            
-            # Delete from Physicians_Login table first
+            # Delete from Physiotherapist_Login table first
             cursor.execute('DELETE FROM Physiotherapist_Login WHERE physiotherapist_id = %s', (physiotherapist_id,))
-            
             # Then delete from Physiotherapist table
             cursor.execute('DELETE FROM Physiotherapist WHERE physiotherapist_id = %s', (physiotherapist_id,))
-            
-            # Commit the changes to the database
             mysql.connection.commit()
-            
-            # Provide feedback to the user
             flash('Physiotherapist removed successfully!', 'success')
         except MySQLdb.Error as e:
-            # Rollback in case of any error
             mysql.connection.rollback()
             flash(f'Error removing physiotherapist: {e}', 'error')
         finally:
-            # Close the cursor
             cursor.close()
         
-        # Redirect to the admin page
         return redirect(url_for('admin_page'))
     
-    # If not logged in or not an admin, redirect to the login page
     flash('You need to log in as an admin to perform this action.', 'warning')
     return redirect(url_for('loginpage'))
 
@@ -405,17 +411,27 @@ def add_receptionist():
         email = request.form['email']
         password = request.form.get('password', None) or str(session['id'])  # Default password is admin id
         
+        # Hash the password before storing
+        hashed_password = generate_password_hash(password)
+
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO Receptionist (receptionist_name, contact_number, address, aadhar_number, email) VALUES (%s, %s, %s, %s, %s)',
-                       (receptionist_name, contact_number, address, aadhar_number, email))
-        receptionist_id = cursor.lastrowid
-        cursor.execute('INSERT INTO Receptionist_Login (receptionist_id, password) VALUES (%s, %s)', (receptionist_id, password))
-        mysql.connection.commit()
-        flash('Receptionist added successfully!', 'success')
+        try:
+            cursor.execute('INSERT INTO Receptionist (receptionist_name, contact_number, address, aadhar_number, email) VALUES (%s, %s, %s, %s, %s)',
+                           (receptionist_name, contact_number, address, aadhar_number, email))
+            receptionist_id = cursor.lastrowid
+            cursor.execute('INSERT INTO Receptionist_Login (receptionist_id, password) VALUES (%s, %s)', (receptionist_id, hashed_password))
+            mysql.connection.commit()
+            flash('Receptionist added successfully!', 'success')
+        except MySQLdb.Error as e:
+            mysql.connection.rollback()
+            flash(f'Error adding receptionist: {e}', 'error')
+        finally:
+            cursor.close()
+        
         return redirect(url_for('admin_page'))
+
     flash('You need to log in as an admin to perform this action.', 'warning')
     return redirect(url_for('loginpage'))
-
 
 @app.route('/remove_receptionist', methods=['POST'])
 def remove_receptionist():
@@ -424,33 +440,78 @@ def remove_receptionist():
         
         try:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            
             # Delete the receptionist from the Receptionist_Login table first
             cursor.execute('DELETE FROM Receptionist_Login WHERE receptionist_id = %s', (receptionist_id,))
-            
             # Then delete the receptionist from the Receptionist table
             cursor.execute('DELETE FROM Receptionist WHERE receptionist_id = %s', (receptionist_id,))
-            
-            # Commit the changes to the database
             mysql.connection.commit()
-            
-            # Provide feedback to the user
             flash('Receptionist removed successfully!', 'success')
         except MySQLdb.Error as e:
-            # Rollback in case of any error
             mysql.connection.rollback()
             flash(f'Error removing receptionist: {e}', 'error')
         finally:
-            # Close the cursor
             cursor.close()
         
-        # Redirect to the admin page
         return redirect(url_for('admin_page'))
     
-    # If not logged in or not an admin, redirect to the login page
     flash('You need to log in as an admin to perform this action.', 'warning')
     return redirect(url_for('loginpage'))
 
+@app.route('/add_admin', methods=['POST'])
+def add_admin():
+    if 'loggedin' in session and session['role'] == 'admin':
+        admin_name = request.form['admin_name']
+        aadhar_number = request.form['aadhar_number']
+        contact_number = request.form['contact_number']
+        email = request.form['email']
+        address = request.form['address']
+        password = request.form.get('password', None) or str(session['id'])  # Default password is admin id
+        
+        # Hash the password before storing
+        hashed_password = generate_password_hash(password)
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            cursor.execute('INSERT INTO Admin (admin_name, aadhar_number, contact_number, email, address) VALUES (%s, %s, %s, %s, %s)',
+                           (admin_name, aadhar_number, contact_number, email, address))
+            admin_id = cursor.lastrowid
+            cursor.execute('INSERT INTO Admin_Login (admin_id, password) VALUES (%s, %s)', (admin_id, hashed_password))
+            mysql.connection.commit()
+            flash('Admin added successfully!', 'success')
+        except MySQLdb.Error as e:
+            mysql.connection.rollback()
+            flash(f'Error adding admin: {e}', 'error')
+        finally:
+            cursor.close()
+        
+        return redirect(url_for('admin_page'))
+    
+    flash('You need to log in as an admin to perform this action.', 'warning')
+    return redirect(url_for('loginpage'))
+
+@app.route('/remove_admin', methods=['POST'])
+def remove_admin():
+    if 'loggedin' in session and session['role'] == 'admin':
+        admin_id = request.form['admin_id']
+        
+        try:
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            # Delete from Admin_Login table first
+            cursor.execute('DELETE FROM Admin_Login WHERE admin_id = %s', (admin_id,))
+            # Then delete from Admin table
+            cursor.execute('DELETE FROM Admin WHERE admin_id = %s', (admin_id,))
+            mysql.connection.commit()
+            flash('Admin removed successfully!', 'success')
+        except MySQLdb.Error as e:
+            mysql.connection.rollback()
+            flash(f'Error removing admin: {e}', 'error')
+        finally:
+            cursor.close()
+        
+        return redirect(url_for('admin_page'))
+    
+    flash('You need to log in as an admin to perform this action.', 'warning')
+    return redirect(url_for('loginpage'))
 @app.route('/view_physios')
 def view_physios():
     if 'loggedin' in session and session['role'] == 'admin':
